@@ -14,6 +14,12 @@ jobs:
       contents: write
 
     steps:
+      - name: "Checkout source code"
+        uses: "actions/checkout@v2"
+        with:
+          ref: ${{ github.ref }}
+          token: ${{ secrets.FAST_FORWARD_PAT }}
+
       - name: "Automated Version Bump"
         uses: "phips28/gh-action-bump-version@master"
         env:
