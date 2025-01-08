@@ -8,9 +8,11 @@
 # You can whitelist files/folders with !, these will not be ignored.
 !*.json
 !*.js
+!assets/**
 !dist/**
 !.github/**
 !.gitignore
+!*.md
 
 # Ignore folders.
 node_modules

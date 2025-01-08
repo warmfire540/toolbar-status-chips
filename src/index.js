@@ -2,6 +2,7 @@ import { css, html, LitElement } from "lit";
 import { Task, TaskStatus } from "@lit/task";
 import equal from "fast-deep-equal";
 import { createChipConfig } from "./config.js";
+import { version } from "../package.json";
 
 class ToolbarStatusChips extends LitElement {
   // declare properties in a static properties class field
@@ -10,11 +11,19 @@ class ToolbarStatusChips extends LitElement {
     _states: { state: true },
     _slug: { state: true },
     _statusPath: { state: true },
+    _optional: { state: true },
   };
 
   constructor() {
     super();
+    this._statusPath = "home";
     this._slug = document.URL.split("?")[0].split("/").pop().replace("-", "_");
+    this._optional = this._slug === this._statusPath;
+
+    console.info(
+      `%c🐱 Poat's Tools: toolbar-status-chips - ${version}`,
+      "color: #CFC493;"
+    );
   }
 
   render() {
@@ -47,7 +56,13 @@ class ToolbarStatusChips extends LitElement {
   // The user supplied configuration. Throw an exception and Home Assistant
   // will render an error card.
   setConfig(config) {
-    this._statusPath = config.variables.status_path;
+    if (config.status_path) {
+      this._statusPath = config.status_path;
+    }
+
+    if (config.optional) {
+      this._optional = config.optional;
+    }
   }
 
   _mergeArraysUsingMapObject(arr1, arr2, key) {
@@ -91,6 +106,7 @@ class ToolbarStatusChips extends LitElement {
     )
       .filter(
         (entity) =>
+          !this._optional ||
           entity.state === (entity.attributes.on_state || "on") ||
           entity.state > 0
       )
@@ -160,7 +176,8 @@ class ToolbarStatusChips extends LitElement {
 
   static getStubConfig() {
     return {
-      _statusPath: "home",
+      optional: false,
+      status_path: "home",
     };
   }
 }
