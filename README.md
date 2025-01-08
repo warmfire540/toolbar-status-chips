@@ -42,6 +42,11 @@ This card is slightly opinionated in how you need to setup things for it to work
 
 ## Installation
 
+### Prerequisites
+
+> [!WARNING]  
+> Before using this card, please ensure you have the [button-card](https://github.com/custom-cards/button-card) custom component installed in your Home Assistant instance.
+
 ### HACS (Recommended)
 
 1. Open HACS in your Home Assistant instance
