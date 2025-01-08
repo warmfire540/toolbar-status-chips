@@ -38,6 +38,7 @@ jobs:
         with:
           artifacts: "dist/**"
           generateReleaseNotes: true
+          tag: ${{ steps.tests.outputs.newTag }}
 
   update-main:
     name: "Update main branch with release changes"
@@ -62,5 +63,5 @@ jobs:
       - name: Merge release into main
         run: |
           git fetch origin release
-          git merge origin/release --no-ff
+          git merge origin/release
           git push origin main
