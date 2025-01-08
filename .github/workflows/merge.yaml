@@ -21,6 +21,7 @@ jobs:
         uses: sequoia-pgp/fast-forward@v1
         with:
           merge: true
+          github_token: ${{ secrets.FAST_FORWARD_PAT }}
           # To reduce the workflow's verbosity, use 'on-error'
           # to only post a comment when an error occurs, or 'never' to
           # never post a comment.  (In all cases the information is
