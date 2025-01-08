@@ -24,5 +24,31 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.FAST_FORWARD_PAT }}
         with:
-          skip-tag: ${{ github.ref == 'refs/heads/main' }}
-          skip-commit: ${{ github.ref == 'refs/heads/release' }}
+          version-type: ${{ github.ref == 'refs/heads/release' && 'minor' || 'patch' }}
+
+  # don't use PAT so round robin of CI not kicked off
+  update-main:
+    name: "Update main branch with release changes"
+    needs: bump-version
+    if: github.ref == 'refs/heads/release'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: Configure Git
+        run: |
+          git config user.name 'GitHub Actions Bot'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Merge release into main
+        run: |
+          git fetch origin release
+          git merge origin/release --no-ff
+          git push origin main
