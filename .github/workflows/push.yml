@@ -1,4 +1,4 @@
-name: "Bump & Tag"
+name: Bump & Tag
 
 on:
   push:
@@ -14,17 +14,13 @@ jobs:
       contents: write
 
     steps:
-      - name: "Checkout source code"
-        uses: "actions/checkout@v2"
-        with:
-          ref: ${{ github.ref }}
-
       - name: "Automated Version Bump"
         uses: "phips28/gh-action-bump-version@master"
         env:
           GITHUB_TOKEN: ${{ secrets.FAST_FORWARD_PAT }}
         with:
           version-type: ${{ github.ref == 'refs/heads/release' && 'minor' || 'patch' }}
+          bump-policy: "ignore"
 
   # don't use PAT so round robin of CI not kicked off
   update-main:

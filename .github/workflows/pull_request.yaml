@@ -1,4 +1,4 @@
-name: pull-request
+name: Fast Forward Check
 
 on:
   pull_request:

@@ -1,4 +1,4 @@
-name: fast-forward
+name: Merge
 
 on:
   issue_comment:
