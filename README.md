@@ -26,7 +26,7 @@ This card is slightly opinionated in how you need to setup things for it to work
 
 |         ![Status Chips](assets/mobile-bottom-nav.PNG)         |
 | :-----------------------------------------------------------: |
-| _Mobile will add a padding automatically for bottom bar use._ |
+| _Mobile will add a padding automatically for bottom nav use._ |
 
 ## Features
 
@@ -67,17 +67,60 @@ lovelace:
 
 ### Card Configuration
 
+#### Main Status Route
+
+> [!IMPORTANT]  
+> The main route shows all your status chips that are 'active'. This is the place to see all issues at once.
+
 Add the card to your Lovelace dashboard using YAML:
 
 ```yaml
 type: custom:toolbar-status-chips
 ```
 
-This assumes your main page you want to show chips on is on the path `home`. If not you can use the following config:
+This assumes your main page you want to show chips on is on the path `home`. i.e. my home page is http://homeassistant.local:8123/the-matrix/home
+
+For example, see my HA configuration for my dashboard home page: [01-home.yaml](https://github.com/warmfire540/home-assistant-config-public/blob/home/ui_lovelace_minimalist/dashboard/views/01-home.yaml)
+
+```yaml
+title: Home
+path: home
+cards:
+  - type: custom:toolbar-status-chips
+```
+
+If your status or home page isn't on the path `home`, you can use the following config to override the page it's on.
 
 ```yaml
 type: custom:toolbar-status-chips
 status_path: status-page # or w/e your url is
+```
+
+#### Area View Status Chips
+
+If you have pages in your dashboard that correspond to areas, automatically the status chips will be displayed for that area. i.e. my room views are like
+
+- http://homeassistant.local:8123/the-matrix/living-room
+- http://homeassistant.local:8123/the-matrix/dining-room
+
+And my status entities are in these areas with the same id.
+
+> [!IMPORTANT]  
+> For area related status chips they are always shown.
+
+Add the card to your Lovelace area view using YAML:
+
+```yaml
+type: custom:toolbar-status-chips
+```
+
+For example, see my HA configuration for my dashboard room header card that's used on all my room routes: [room_header.yaml](https://github.com/warmfire540/home-assistant-config-public/blob/home/ui_lovelace_minimalist/custom_cards/layout/room_header.yaml)
+
+```yaml
+title: Living Room
+path: living-room
+cards:
+  - type: custom:toolbar-status-chips
 ```
 
 ### Entity Configuration

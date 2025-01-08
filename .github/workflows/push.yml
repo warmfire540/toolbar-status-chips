@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - "main"
+      - "release"
 
 jobs:
   bump-version:
@@ -18,12 +19,11 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
-      - name: "Setup Node.js"
-        uses: "actions/setup-node@v1"
-        with:
-          node-version: 12
-
       - name: "Automated Version Bump"
         uses: "phips28/gh-action-bump-version@master"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          skip-tag: ${{ github.ref == 'refs/heads/main' }}
+          skip-commit: ${{ github.ref == 'refs/heads/release' }}
+          skip-push: ${{ github.ref == 'refs/heads/release' }}

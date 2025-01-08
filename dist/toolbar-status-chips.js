@@ -827,7 +827,7 @@ function $4f6f37ff596e96ae$export$8e8ea1261bec8173(entity, hass) {
 
 
 var $b06602ab53bd58a3$exports = {};
-$b06602ab53bd58a3$exports = JSON.parse("{\"name\":\"toolbar-status-card\",\"version\":\"0.0.1\",\"author\":\"Patrick Masters\",\"license\":\"ISC\",\"description\":\"Custom status badges for Home Assistant in the toolbar\",\"source\":\"src/index.js\",\"module\":\"dist/toolbar-status-chips.js\",\"targets\":{\"module\":{\"includeNodeModules\":true}},\"scripts\":{\"watch\":\"parcel watch\",\"build\":\"parcel build\"},\"devDependencies\":{\"@parcel/transformer-inline-string\":\"^2.8.3\",\"parcel\":\"^2.8.3\"},\"dependencies\":{\"@lit/task\":\"^1.0.1\",\"fast-deep-equal\":\"^3.1.3\",\"lit\":\"^3.2.1\"}}");
+$b06602ab53bd58a3$exports = JSON.parse("{\"name\":\"toolbar-status-card\",\"version\":\"0.0.2\",\"author\":\"Patrick Masters\",\"license\":\"ISC\",\"description\":\"Custom status badges for Home Assistant in the toolbar\",\"source\":\"src/index.js\",\"module\":\"dist/toolbar-status-chips.js\",\"targets\":{\"module\":{\"includeNodeModules\":true}},\"scripts\":{\"watch\":\"parcel watch\",\"build\":\"parcel build\"},\"devDependencies\":{\"@parcel/transformer-inline-string\":\"^2.8.3\",\"parcel\":\"^2.8.3\"},\"dependencies\":{\"@lit/task\":\"^1.0.1\",\"fast-deep-equal\":\"^3.1.3\",\"lit\":\"^3.2.1\"}}");
 
 
 class $d832f2ef8a5ce6ac$var$ToolbarStatusChips extends (0, $ab210b2da7b39b9d$export$3f2f9f5909897157) {
