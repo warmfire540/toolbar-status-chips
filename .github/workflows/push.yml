@@ -1,4 +1,4 @@
-name: "Bump Version"
+name: "Bump & Tag"
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   bump-version:
-    name: "Bump Version on main"
+    name: "Bump Version or Tag"
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -22,8 +22,7 @@ jobs:
       - name: "Automated Version Bump"
         uses: "phips28/gh-action-bump-version@master"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.FAST_FORWARD_PAT }}
         with:
           skip-tag: ${{ github.ref == 'refs/heads/main' }}
           skip-commit: ${{ github.ref == 'refs/heads/release' }}
-          skip-push: ${{ github.ref == 'refs/heads/release' }}
