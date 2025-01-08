@@ -9,6 +9,8 @@ jobs:
   bump-version:
     name: "Bump Version on main"
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: "Checkout source code"
@@ -23,7 +25,5 @@ jobs:
 
       - name: "Automated Version Bump"
         uses: "phips28/gh-action-bump-version@master"
-        permissions:
-          contents: write
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
