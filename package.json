@@ -1,6 +1,6 @@
 {
   "name": "toolbar-status-card",
-  "version": "0.0.15",
+  "version": "0.1.0",
   "author": "Patrick Masters",
   "license": "ISC",
   "description": "Custom status badges for Home Assistant in the toolbar",
