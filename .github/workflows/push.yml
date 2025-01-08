@@ -18,17 +18,27 @@ jobs:
         uses: "actions/checkout@v2"
         with:
           ref: ${{ github.ref }}
-          token: ${{ secrets.FAST_FORWARD_PAT }}
 
       - name: "Automated Version Bump"
         uses: "phips28/gh-action-bump-version@master"
-        env:
-          GITHUB_TOKEN: ${{ secrets.FAST_FORWARD_PAT }}
         with:
           version-type: ${{ github.ref == 'refs/heads/release' && 'minor' || 'patch' }}
           bump-policy: "ignore"
 
-  # don't use PAT so round robin of CI not kicked off
+  create-release:
+    name: "Create Release"
+    needs: bump-version
+    if: github.ref == 'refs/heads/release'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ncipollo/release-action@v1
+        with:
+          artifacts: "dist/**"
+          generateReleaseNotes: true
+
   update-main:
     name: "Update main branch with release changes"
     needs: bump-version
