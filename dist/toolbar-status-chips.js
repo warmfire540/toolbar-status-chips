@@ -826,6 +826,10 @@ function $4f6f37ff596e96ae$export$8e8ea1261bec8173(entity, hass) {
 }
 
 
+var $b06602ab53bd58a3$exports = {};
+$b06602ab53bd58a3$exports = JSON.parse("{\"name\":\"toolbar-status-card\",\"version\":\"0.0.1\",\"author\":\"Patrick Masters\",\"license\":\"ISC\",\"description\":\"Custom status badges for Home Assistant in the toolbar\",\"source\":\"src/index.js\",\"module\":\"dist/toolbar-status-chips.js\",\"targets\":{\"module\":{\"includeNodeModules\":true}},\"scripts\":{\"watch\":\"parcel watch\",\"build\":\"parcel build\"},\"devDependencies\":{\"@parcel/transformer-inline-string\":\"^2.8.3\",\"parcel\":\"^2.8.3\"},\"dependencies\":{\"@lit/task\":\"^1.0.1\",\"fast-deep-equal\":\"^3.1.3\",\"lit\":\"^3.2.1\"}}");
+
+
 class $d832f2ef8a5ce6ac$var$ToolbarStatusChips extends (0, $ab210b2da7b39b9d$export$3f2f9f5909897157) {
     // declare properties in a static properties class field
     static properties = {
@@ -840,11 +844,17 @@ class $d832f2ef8a5ce6ac$var$ToolbarStatusChips extends (0, $ab210b2da7b39b9d$exp
         },
         _statusPath: {
             state: true
+        },
+        _optional: {
+            state: true
         }
     };
     constructor(){
         super();
+        this._statusPath = "home";
         this._slug = document.URL.split("?")[0].split("/").pop().replace("-", "_");
+        this._optional = this._slug === this._statusPath;
+        console.info(`%c\u{1F431} Poat's Tools: toolbar-status-chips - ${(0, $b06602ab53bd58a3$exports.version)}`, "color: #CFC493;");
     }
     render() {
         return (0, $f58f44579a4747ac$export$c0bb0b647f701bb5)`
@@ -872,7 +882,8 @@ class $d832f2ef8a5ce6ac$var$ToolbarStatusChips extends (0, $ab210b2da7b39b9d$exp
    */ // The user supplied configuration. Throw an exception and Home Assistant
     // will render an error card.
     setConfig(config) {
-        this._statusPath = config.variables.status_path;
+        if (config.status_path) this._statusPath = config.status_path;
+        if (config.optional) this._optional = config.optional;
     }
     _mergeArraysUsingMapObject(arr1, arr2, key) {
         const map = new Map(arr2.map((item)=>[
@@ -897,7 +908,7 @@ class $d832f2ef8a5ce6ac$var$ToolbarStatusChips extends (0, $ab210b2da7b39b9d$exp
             const devices = Object.values(hass.devices).filter((device)=>device.area_id === this._slug).map((device)=>device.id);
             entities = entities.filter((entity)=>entity.area_id === this._slug || devices.includes(entity.device_id));
         }
-        const entitiesWithState = this._mergeArraysUsingMapObject(entities, Object.values(hass.states), "entity_id").filter((entity)=>entity.state === (entity.attributes.on_state || "on") || entity.state > 0).map((entity)=>{
+        const entitiesWithState = this._mergeArraysUsingMapObject(entities, Object.values(hass.states), "entity_id").filter((entity)=>!this._optional || entity.state === (entity.attributes.on_state || "on") || entity.state > 0).map((entity)=>{
             return {
                 entity_id: entity.entity_id,
                 state: entity.state,
@@ -941,7 +952,8 @@ class $d832f2ef8a5ce6ac$var$ToolbarStatusChips extends (0, $ab210b2da7b39b9d$exp
     });
     static getStubConfig() {
         return {
-            _statusPath: "home"
+            optional: false,
+            status_path: "home"
         };
     }
 }
