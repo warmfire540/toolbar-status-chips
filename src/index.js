@@ -62,7 +62,7 @@ class ToolbarStatusChips extends LitElement {
   }
 
   get soloLabel() {
-    return this._config.solo_label || "status";
+    return this._config.solo_label;
   }
 
   get statusPath() {
@@ -101,7 +101,7 @@ class ToolbarStatusChips extends LitElement {
 
     // get entities with the status label
     let entities = Object.values(hass.entities).filter((entity) =>
-      entity.labels.includes(this.soloLabel)
+      entity.labels.includes(this.soloLabel || "status")
     );
 
     // filter entities by additional label if provided or area if not on the status page
