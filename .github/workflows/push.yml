@@ -37,6 +37,10 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v3
+      - name: Run NPM build
+        uses: anna-money/github-actions-npm@v2
+        with:
+          target: "build"
       - uses: ncipollo/release-action@v1
         with:
           artifacts: "dist/**"

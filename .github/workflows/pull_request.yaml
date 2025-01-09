@@ -5,6 +5,16 @@ on:
     types: [opened, reopened, synchronize]
 
 jobs:
+  check-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Run NPM build
+        uses: anna-money/github-actions-npm@v2
+        with:
+          target: "build"
+
   check-fast-forward:
     runs-on: ubuntu-latest
 

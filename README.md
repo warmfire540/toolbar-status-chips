@@ -57,9 +57,9 @@ This card is slightly opinionated in how you need to setup things for it to work
 
 ### Manual Installation
 
-1. Download the `toolbar-status-chips.js` file from the latest release or `dist/` folder
+1. Download the `toolbar-status-chips.js` file from the latest release in the Releases tab.
 2. Copy it to your `www/community/toolbar-status-chips/` folder
-3. Add the following to your `configuration.yaml`:
+3. Add the following to your `configuration.yaml` (or add as a resource in dashboards menu)
 
 ```yaml
 lovelace:
@@ -270,3 +270,15 @@ MIT License - see the [LICENSE](LICENSE) file for details
 [license-shield]: https://img.shields.io/github/license/custom-cards/toolbar-status-chips.svg
 [issues]: https://github.com/custom-cards/toolbar-status-chips/issues
 [forum]: https://community.home-assistant.io/
+
+## Build Status
+
+### Main
+
+[![Bump & Tag](https://github.com/warmfire540/toolbar-status-chips/actions/workflows/push.yml/badge.svg?branch=main)](https://github.com/warmfire540/toolbar-status-chips/actions/workflows/push.yml)
+[![Fast Forward Check](https://github.com/warmfire540/toolbar-status-chips/actions/workflows/pull_request.yaml/badge.svg?branch=main)](https://github.com/warmfire540/toolbar-status-chips/actions/workflows/pull_request.yaml)
+
+### Release
+
+[![Bump & Tag](https://github.com/warmfire540/toolbar-status-chips/actions/workflows/push.yml/badge.svg?branch=release)](https://github.com/warmfire540/toolbar-status-chips/actions/workflows/push.yml)
+[![Merge](https://github.com/warmfire540/toolbar-status-chips/actions/workflows/merge.yaml/badge.svg)](https://github.com/warmfire540/toolbar-status-chips/actions/workflows/merge.yaml)
