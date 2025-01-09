@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Run NPM build
-        uses: anna-money/github-actions-npm
+        uses: anna-money/github-actions-npm@master
         with:
           target: "build"
 
