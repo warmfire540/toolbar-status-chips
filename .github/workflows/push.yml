@@ -37,6 +37,8 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Run NPM build
         uses: anna-money/github-actions-npm@master
         with:
