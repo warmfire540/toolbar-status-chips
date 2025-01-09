@@ -7,18 +7,15 @@ import { version } from "../package.json";
 class ToolbarStatusChips extends LitElement {
   // declare properties in a static properties class field
   static properties = {
+    _config: { state: true },
     _entities: { state: true },
-    _states: { state: true },
     _slug: { state: true },
-    _statusPath: { state: true },
-    _optional: { state: true },
+    _states: { state: true },
   };
 
   constructor() {
     super();
-    this._statusPath = "home";
     this._slug = document.URL.split("?")[0].split("/").pop().replace("-", "_");
-    this._optional = this._slug === this._statusPath;
 
     console.info(
       `%c🐱 Poat's Tools: toolbar-status-chips - ${version}`,
@@ -49,6 +46,29 @@ class ToolbarStatusChips extends LitElement {
     }
   `;
 
+  // config property getters
+  get additionalLabel() {
+    return this._config.additional_label;
+  }
+
+  get area() {
+    return this._config.area || this._slug;
+  }
+
+  get optional() {
+    return this._config.optional !== undefined
+      ? this._config.optional
+      : this.area === this.statusPath;
+  }
+
+  get soloLabel() {
+    return this._config.solo_label || "status";
+  }
+
+  get statusPath() {
+    return this._config.status_path || "home";
+  }
+
   /*
    * HASS setup
    */
@@ -56,12 +76,8 @@ class ToolbarStatusChips extends LitElement {
   // The user supplied configuration. Throw an exception and Home Assistant
   // will render an error card.
   setConfig(config) {
-    if (config.status_path) {
-      this._statusPath = config.status_path;
-    }
-
-    if (config.optional) {
-      this._optional = config.optional;
+    if (!equal(config, this._config)) {
+      this._config = config;
     }
   }
 
@@ -85,18 +101,26 @@ class ToolbarStatusChips extends LitElement {
 
     // get entities with the status label
     let entities = Object.values(hass.entities).filter((entity) =>
-      entity.labels.includes("status")
+      entity.labels.includes(this.soloLabel)
     );
 
-    if (this._slug !== this._statusPath) {
-      // filter entities by area as well
-      const devices = Object.values(hass.devices)
-        .filter((device) => device.area_id === this._slug)
-        .map((device) => device.id);
-      entities = entities.filter(
-        (entity) =>
-          entity.area_id === this._slug || devices.includes(entity.device_id)
-      );
+    // filter entities by additional label if provided or area if not on the status page
+    if (!this.soloLabel) {
+      // solo label trumps additional filtering
+      if (this.additionalLabel) {
+        entities = entities.filter((entity) =>
+          entity.labels.includes(this.additionalLabel)
+        );
+      } else if (this.area !== this.statusPath) {
+        // filter entities by area as well
+        const devices = Object.values(hass.devices)
+          .filter((device) => device.area_id === this.area)
+          .map((device) => device.id);
+        entities = entities.filter(
+          (entity) =>
+            entity.area_id === this.area || devices.includes(entity.device_id)
+        );
+      }
     }
 
     const entitiesWithState = this._mergeArraysUsingMapObject(
@@ -106,7 +130,7 @@ class ToolbarStatusChips extends LitElement {
     )
       .filter(
         (entity) =>
-          !this._optional ||
+          !this.optional ||
           entity.state === (entity.attributes.on_state || "on") ||
           entity.state > 0
       )

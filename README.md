@@ -103,6 +103,9 @@ status_path: status-page # or w/e your url is
 
 #### Area View Status Chips
 
+> [!IMPORTANT]  
+> Using this setting requires 2 labels.
+
 If you have pages in your dashboard that correspond to areas, automatically the status chips will be displayed for that area. i.e. my room views are like
 
 - http://homeassistant.local:8123/the-matrix/living-room
@@ -110,7 +113,7 @@ If you have pages in your dashboard that correspond to areas, automatically the 
 
 And my status entities are in these areas with the same id.
 
-> [!IMPORTANT]  
+> [!NOTE]  
 > For area related status chips they are always shown.
 
 Add the card to your Lovelace area view using YAML:
@@ -126,6 +129,38 @@ title: Living Room
 path: living-room
 cards:
   - type: custom:toolbar-status-chips
+```
+
+#### Using `additional_label` property
+
+Use this if you have a view that you want to combine some status entities on, that aren't related to an area. Using this will ignore the url slug.
+
+```yaml
+type: custom:toolbar-status-chips
+additional_label: cats
+```
+
+Entities will have to have 2 labels for this (see below screenshot)
+
+- Status
+- Cats
+
+#### Using `solo_label` property
+
+Use this if you just want to show all chips given some label. Doesn't care if it contains a 'Status' label.
+
+```yaml
+type: custom:toolbar-status-chips
+solo_label: lights
+```
+
+#### Using `area` property
+
+Use this if you have non standard matching room views and areas. You can have any area show on any route with this.
+
+```yaml
+type: custom:toolbar-status-chips
+area: yard
 ```
 
 ### Entity Configuration
@@ -183,10 +218,13 @@ The card will automatically:
 
 ## Options
 
-| Name        | Type    | Default                     | Description                                                                             |
-| ----------- | ------- | --------------------------- | --------------------------------------------------------------------------------------- |
-| status_path | string  | "home"                      | The path identifier for the home view. These show all "problem" chips across all areas. |
-| optional    | boolean | `true` on the `status_path` | Hides chips that are not active                                                         |
+| Name             | Type    | Default                     | Description                                                                              |
+| ---------------- | ------- | --------------------------- | ---------------------------------------------------------------------------------------- |
+| status_path      | string  | "home"                      | The path identifier for the home view. These show all "problem" chips across all areas.  |
+| optional         | boolean | `true` on the `status_path` | Hides chips that are not active.                                                         |
+| additional_label | string  | null                        | This is useful if you want to roll-up entities in a non area view, using a second label. |
+| solo_label       | string  | null                        | Use this option to override having a status label or areas.                              |
+| area             | string  | null                        | Use this option to override using the url slug.                                          |
 
 ## Troubleshooting
 
