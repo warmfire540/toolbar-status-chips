@@ -1,32 +1,22 @@
+import { Entity, HomeAssistant } from "./types";
+import { ChipEntity } from "./entity";
+
 /**
  * Determines if an entity should be included based on its state
- * @param {Object} entity - The entity to check
+ * @param {ChipEntity} entity - The entity to check
  * @param {boolean} optional - Whether entities must be "active" to be included
  * @returns {boolean} - Whether the entity should be included
  */
-const shouldIncludeEntity = (entity, optional) => {
-  // If optional is false, include all entities
-  if (!optional) {
-    return true;
-  }
-
-  // Check if entity is "active" by either:
-  // 1. Matching its custom "on" state (stored in attributes.on_state)
-  // 2. Matching the default "on" state
-  // 3. Having a numeric state greater than 0
-  const isActive =
-    entity.state === (entity.attributes.on_state || "on") || entity.state > 0;
-
-  return isActive;
-};
+const shouldIncludeEntity = (entity: ChipEntity, optional: boolean): boolean =>
+  !optional || entity.isActive;
 
 /**
  * Merges two arrays of objects based on a common key, updating items from arr1 with matching properties from arr2.
  * Properties from arr2 will overwrite properties in arr1 if they exist in both objects.
  *
- * @param arr1 - The primary array of objects to be updated
- * @param arr2 - The secondary array of objects containing update values
- * @param key - The property name to use as the matching key between objects
+ * @param {any[]} arr1 - The primary array of objects to be updated
+ * @param {any[]} arr2 - The secondary array of objects containing update values
+ * @param {string} key - The property name to use as the matching key between objects
  * @returns A new array where objects from arr1 are updated with matching properties from arr2
  *
  * @example
@@ -57,7 +47,11 @@ const mergeArraysUsingMapObject = (arr1: any[], arr2: any[], key: string) => {
  * @param optional - Optional configuration parameters for entity filtering
  * @returns Array of processed entities with their current states and attributes
  */
-export function entitiesThatShouldBeChips(entities, hass, optional) {
+export const entitiesThatShouldBeChips = (
+  entities: Entity[],
+  hass: HomeAssistant,
+  optional: boolean
+): ChipEntity[] => {
   // First, merge the entity definitions with their current states from Home Assistant
   // Converting hass.states object to array using Object.values()
   const mergedEntities = mergeArraysUsingMapObject(
@@ -69,10 +63,45 @@ export function entitiesThatShouldBeChips(entities, hass, optional) {
   // Filter out entities that don't meet inclusion criteria
   // Then map to a standardized format with only necessary properties
   return mergedEntities
-    .filter((entity) => shouldIncludeEntity(entity, optional))
-    .map((entity) => ({
-      entity_id: entity.entity_id,
-      state: entity.state,
-      attributes: entity.attributes,
-    }));
-}
+    .map(
+      (entity) =>
+        new ChipEntity(entity.entity_id, entity.state, entity.attributes)
+    )
+    .filter((entity) => shouldIncludeEntity(entity, optional));
+};
+
+/**
+ * Adds top margin to the main Home Assistant view container to accommodate chips on mobile devices.
+ * This function only applies margin on mobile viewports (max-width: 768px).
+ * It navigates through Home Assistant's shadow DOM structure to find the view container.
+ *
+ * @param margin - Amount of top margin to add in pixels, defaults to 45
+ * @returns void
+ *
+ * @example
+ * // Add default 45px margin
+ * addMarginForChips();
+ *
+ * // Add custom 60px margin
+ * addMarginForChips(60);
+ */
+export const addMarginForChips = (margin = 45): void => {
+  // Check if viewport matches mobile breakpoint
+  if (!window.matchMedia("only screen and (max-width: 768px)").matches) {
+    // Skip margin addition if not on mobile viewport
+    return;
+  }
+
+  // Navigate through Home Assistant's shadow DOM to find the view container
+  // Each querySelector may return null, so we use optional chaining
+  const viewContainer = document
+    ?.querySelector("home-assistant")
+    ?.shadowRoot?.querySelector("home-assistant-main")
+    ?.shadowRoot?.querySelector("ha-drawer partial-panel-resolver")
+    ?.querySelector("ha-panel-lovelace")
+    ?.shadowRoot?.querySelector("hui-root")
+    ?.shadowRoot?.querySelector("hui-view-container") as HTMLElement;
+
+  // Set the margin if we found the container
+  viewContainer?.style?.setProperty("margin-top", `${margin}px`);
+};

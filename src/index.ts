@@ -2,9 +2,9 @@ import { css, html, LitElement } from "lit";
 import { state } from "lit/decorators.js";
 import { Task, TaskStatus } from "@lit/task";
 import * as equal from "fast-deep-equal";
-import { createChipConfig } from "./config.js";
-import { entitiesThatShouldBeChips } from "./helpers.js";
-import { Config, HomeAssistant, Entity } from "./types.js";
+import { createChipConfig } from "./config";
+import { entitiesThatShouldBeChips, addMarginForChips } from "./helpers";
+import { Config, HomeAssistant, Entity } from "./types";
 import { version } from "../package.json";
 
 declare global {
@@ -20,7 +20,7 @@ class ToolbarStatusChips extends LitElement {
   private _config: Config;
 
   @state()
-  private _entities: Entity[];
+  private _entities: ChipEntity[];
 
   @state()
   private _slug: string | undefined;
@@ -137,29 +137,6 @@ class ToolbarStatusChips extends LitElement {
     }
   }
 
-  /*
-   * Functions
-   */
-
-  // potentially there exists a margin for some people that we need to deal with
-  _addMarginForChips(margin = 45) {
-    if (!window.matchMedia("only screen and (max-width: 768px)").matches) {
-      // no need to add margin if not mobile
-      return;
-    }
-
-    // it's a game w/ shadow roots..
-    (
-      document
-        ?.querySelector("home-assistant")
-        ?.shadowRoot?.querySelector("home-assistant-main")
-        ?.shadowRoot?.querySelector("ha-drawer partial-panel-resolver")
-        ?.querySelector("ha-panel-lovelace")
-        ?.shadowRoot?.querySelector("hui-root")
-        ?.shadowRoot?.querySelector("hui-view-container") as HTMLElement
-    )?.style?.setProperty("margin-top", `${margin}px`);
-  }
-
   // Task handles async work
   _createChipsTask = new Task(this, {
     task: async () => {
@@ -169,7 +146,7 @@ class ToolbarStatusChips extends LitElement {
       );
 
       if (!cards.length) {
-        this._addMarginForChips(0);
+        addMarginForChips(0);
         return;
       }
 
@@ -179,7 +156,7 @@ class ToolbarStatusChips extends LitElement {
       });
       stack.hass = this._hass;
 
-      this._addMarginForChips();
+      addMarginForChips();
 
       return stack;
     },

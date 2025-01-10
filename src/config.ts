@@ -1,4 +1,6 @@
-export function createChipConfig(entity, hass) {
+import { HomeAssistant } from "./types";
+
+export function createChipConfig(entity: ChipEntity, hass: HomeAssistant) {
   return {
     type: "custom:button-card",
     entity: entity.entity_id,
@@ -8,7 +10,7 @@ export function createChipConfig(entity, hass) {
     hold_action: {
       action: "more-info",
     },
-    label: entity.state > 0 ? entity.state : null,
+    label: entity.isPositiveState ? entity.state : null,
     tap_action: {
       action: entity.attributes.navigation_path ? "navigate" : "more-info",
       navigation_path: entity.attributes.navigation_path,
@@ -53,11 +55,9 @@ export function createChipConfig(entity, hass) {
       ],
       icon: [
         {
-          color:
-            entity.state > 0 ||
-            entity.state == (entity.attributes.on_state || "on")
-              ? entity.attributes.on_color || "var(--red-color)"
-              : "var(--green-color)",
+          color: entity.isActive
+            ? entity.attributes.on_color || "var(--red-color)"
+            : "var(--green-color)",
         },
       ],
     },
