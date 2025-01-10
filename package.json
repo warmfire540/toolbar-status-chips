@@ -4,7 +4,7 @@
   "author": "Patrick Masters",
   "license": "ISC",
   "description": "Custom status badges for Home Assistant in the toolbar",
-  "source": "src/index.js",
+  "source": "src/index.ts",
   "module": "dist/toolbar-status-chips.js",
   "targets": {
     "module": {

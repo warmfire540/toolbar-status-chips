@@ -16,23 +16,10 @@ export function createChipConfig(entity, hass) {
     styles: {
       label: [
         {
-          "justify-self": "center",
-        },
-        {
           padding: "0px 6px",
         },
         {
-          "font-weight": "bold",
-        },
-        {
-          "font-size": "14px",
-        },
-        {
-          "line-height": "100%",
-        },
-        {
-          color:
-            "[[[ return variables.ulm_chip_mdi_icon_state_label_color; ]]]",
+          font: "bold 14px system-ui",
         },
       ],
       img_cell: [
@@ -58,10 +45,7 @@ export function createChipConfig(entity, hass) {
           width: "auto",
         },
         {
-          "padding-left": "6px",
-        },
-        {
-          "padding-right": "6px",
+          padding: "0px 6px",
         },
         {
           "margin-right": "5px",

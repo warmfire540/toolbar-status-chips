@@ -7,7 +7,7 @@
 
 # You can whitelist files/folders with !, these will not be ignored.
 !*.json
-!*.js
+!*.ts
 !assets/**
 !dist/**
 !.github/**

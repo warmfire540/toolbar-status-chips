@@ -1,21 +1,39 @@
 import { css, html, LitElement } from "lit";
+import { state } from "lit/decorators.js";
 import { Task, TaskStatus } from "@lit/task";
-import equal from "fast-deep-equal";
+import * as equal from "fast-deep-equal";
 import { createChipConfig } from "./config.js";
+import { entitiesThatShouldBeChips } from "./helpers.js";
+import { Config, HomeAssistant, Entity } from "./types.js";
 import { version } from "../package.json";
 
+declare global {
+  interface Window {
+    customCards: Array<Object>;
+  }
+}
+
+declare function loadCardHelpers(): Promise<any>;
+
 class ToolbarStatusChips extends LitElement {
-  // declare properties in a static properties class field
-  static properties = {
-    _config: { state: true },
-    _entities: { state: true },
-    _slug: { state: true },
-    _states: { state: true },
-  };
+  @state()
+  private _config: Config;
+
+  @state()
+  private _entities: Entity[];
+
+  @state()
+  private _slug: string | undefined;
+
+  // not state
+  private _hass: HomeAssistant;
 
   constructor() {
     super();
-    this._slug = document.URL.split("?")[0].split("/").pop().replace("-", "_");
+    this._slug = document?.URL?.split("?")[0]
+      ?.split("/")
+      ?.pop()
+      ?.replace("-", "_");
 
     console.info(
       `%c🐱 Poat's Tools: toolbar-status-chips - ${version}`,
@@ -24,14 +42,14 @@ class ToolbarStatusChips extends LitElement {
   }
 
   render() {
-    return html`
-      ${this._createChipsTask.render({
-        initial: () => html``,
-        pending: () => html``,
-        complete: (value) => html`<div id="chips">${value}</div>`,
-        error: (error) => html`${error}`,
-      })}
-    `;
+    return this._entities
+      ? this._createChipsTask.render({
+          initial: () => html``,
+          pending: () => html``,
+          complete: (value) => html`<div id="chips">${value}</div>`,
+          error: (error) => html`${error}`,
+        })
+      : html``;
   }
 
   // styles to position the status chips at the top of on the toolbar
@@ -81,24 +99,9 @@ class ToolbarStatusChips extends LitElement {
     }
   }
 
-  _mergeArraysUsingMapObject(arr1, arr2, key) {
-    const map = new Map(arr2.map((item) => [item[key], item]));
-    return arr1.map((item) => ({
-      ...item,
-      ...map.get(item[key]),
-    }));
-  }
-
   // Whenever the state changes, a new `hass` object is set. Use this to
   // update your content.
-  set hass(hass) {
-    this._hass = hass;
-
-    if (!this._createChipsTask.status === TaskStatus.COMPLETE) {
-      // wait for the task to complete
-      return;
-    }
-
+  set hass(hass: HomeAssistant) {
     // get entities with the status label
     let entities = Object.values(hass.entities).filter((entity) =>
       entity.labels.includes(this.soloLabel || "status")
@@ -123,29 +126,13 @@ class ToolbarStatusChips extends LitElement {
       }
     }
 
-    const entitiesWithState = this._mergeArraysUsingMapObject(
-      entities,
-      Object.values(hass.states),
-      "entity_id"
-    )
-      .filter(
-        (entity) =>
-          !this.optional ||
-          entity.state === (entity.attributes.on_state || "on") ||
-          entity.state > 0
-      )
-      .map((entity) => {
-        return {
-          entity_id: entity.entity_id,
-          state: entity.state,
-          attributes: entity.attributes,
-        };
-      });
+    const chips = entitiesThatShouldBeChips(entities, hass, this.optional);
 
     // check if the entities have changed - update the card
-    if (!equal(entitiesWithState, this._entities)) {
+    if (!equal(chips, this._entities)) {
       // no need to check states if entities have changed
-      this._entities = entitiesWithState;
+      this._entities = chips;
+      this._hass = hass;
       this._createChipsTask.run();
     }
   }
@@ -162,14 +149,15 @@ class ToolbarStatusChips extends LitElement {
     }
 
     // it's a game w/ shadow roots..
-    document
-      .querySelector("home-assistant")
-      .shadowRoot.querySelector("home-assistant-main")
-      .shadowRoot.querySelector("ha-drawer partial-panel-resolver")
-      .querySelector("ha-panel-lovelace")
-      .shadowRoot.querySelector("hui-root")
-      .shadowRoot.querySelector("hui-view-container")
-      .style.setProperty("margin-top", `${margin}px`);
+    (
+      document
+        ?.querySelector("home-assistant")
+        ?.shadowRoot?.querySelector("home-assistant-main")
+        ?.shadowRoot?.querySelector("ha-drawer partial-panel-resolver")
+        ?.querySelector("ha-panel-lovelace")
+        ?.shadowRoot?.querySelector("hui-root")
+        ?.shadowRoot?.querySelector("hui-view-container") as HTMLElement
+    )?.style?.setProperty("margin-top", `${margin}px`);
   }
 
   // Task handles async work
