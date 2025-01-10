@@ -32,7 +32,7 @@ export class ChipEntity {
    * Determines if the entity state is a positive number
    */
   get isPositiveState(): boolean {
-    return parseFloat(this.state) > 0;
+    return this.isNumeric(this.state) && parseFloat(this.state) > 0;
   }
 
   /**
@@ -45,7 +45,7 @@ export class ChipEntity {
    * - Uses the original active/inactive logic
    */
   get iconColor(): string {
-    if (this.isNumericState(this.state)) {
+    if (this.isNumeric(this.state)) {
       const numericState = parseFloat(this.state);
       if (numericState > this.attributes.numeric_state_pass_threshold)
         return "var(--green-color)";
@@ -60,9 +60,10 @@ export class ChipEntity {
   }
 
   /**
-   * Checks if the state is numeric
+   * Checks if a value is numeric
    */
-  private isNumericState(str: string): boolean {
-    return !isNaN(parseFloat(str));
-  }
+  private isNumeric = (num: any) =>
+    (typeof num === "number" ||
+      (typeof num === "string" && num.trim() !== "")) &&
+    !isNaN(num as number);
 }
