@@ -1,4 +1,5 @@
 import { HomeAssistant } from "./types";
+import { ChipEntity } from "./entity";
 
 export function createChipConfig(entity: ChipEntity, hass: HomeAssistant) {
   return {
@@ -55,9 +56,7 @@ export function createChipConfig(entity: ChipEntity, hass: HomeAssistant) {
       ],
       icon: [
         {
-          color: entity.isActive
-            ? entity.attributes.on_color || "var(--red-color)"
-            : "var(--green-color)",
+          color: entity.iconColor,
         },
       ],
     },

@@ -3,8 +3,9 @@ import { state } from "lit/decorators.js";
 import { Task, TaskStatus } from "@lit/task";
 import * as equal from "fast-deep-equal";
 import { createChipConfig } from "./config";
+import { ChipEntity } from "./entity";
 import { entitiesThatShouldBeChips, addMarginForChips } from "./helpers";
-import { Config, HomeAssistant, Entity } from "./types";
+import { Config, HomeAssistant } from "./types";
 import { version } from "../package.json";
 
 declare global {

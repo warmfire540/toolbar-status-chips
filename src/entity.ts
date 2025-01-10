@@ -34,4 +34,35 @@ export class ChipEntity {
   get isPositiveState(): boolean {
     return parseFloat(this.state) > 0;
   }
+
+  /**
+   * Determines the color of the icon based on the entity state
+   * For numeric states:
+   * - Green if > 30
+   * - Amber if > 20
+   * - Red if <= 20
+   * For non-numeric states:
+   * - Uses the original active/inactive logic
+   */
+  get iconColor(): string {
+    if (this.isNumericState(this.state)) {
+      const numericState = parseFloat(this.state);
+      if (numericState > this.attributes.numeric_state_pass_threshold)
+        return "var(--green-color)";
+      if (numericState > this.attributes.numeric_state_warning_threshold)
+        return "var(--amber-color)";
+    }
+
+    // the entity state matches configured on_state or it's a positive number
+    return this.isActive
+      ? this.attributes.on_color || "var(--red-color)"
+      : "var(--green-color)";
+  }
+
+  /**
+   * Checks if the state is numeric
+   */
+  private isNumericState(str: string): boolean {
+    return !isNaN(parseFloat(str));
+  }
 }

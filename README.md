@@ -165,6 +165,8 @@ area: yard
 
 ### Entity Configuration
 
+#### Standard Configuration
+
 1. Label your entities with "Status" in Home Assistant. Also set areas for them that corresponde to "rooms" in your dashboard.
 
 | ![Status Labels](assets/status-labels.png) |
@@ -174,6 +176,8 @@ area: yard
 2. Entities can specify their active state using the `on_state` attribute (defaults to "on").
 3. Entities can specify a place to navigate to using the `navigation_path` attribute (defaults to "more-info" on click)
 4. Entities can specify their active color using the `on_color` attribute (defaults to "red").
+5. Entities with numeric state can specify a pass/warning threshold to show three colors using `numeric_state_pass_threshold` and `numeric_state_warning_threshold`
+   - this is useful for entities where a numeric state is good and actually counts down (like a filter or battery %).
 
 You can customize entity attributes several ways.
 
@@ -207,6 +211,28 @@ sensor:
       on_state: "True"
 ```
 
+#### Numeric State Entities
+
+Normally when an entity has a numeeric state, the chip is 'active' and will be red. This is useful for entities like "count of offline devices" or "home assistant error count".
+
+However, for ones that count down like filter or battery % - you can use additional properties `numeric_state_pass_threshold` and `numeric_state_warning_threshold`.
+
+Here's an example of my entity customization:
+
+```yaml
+sensor.cat_noms_desiccant_days_remaining:
+  navigation_path: /the-matrix/cats
+  numeric_state_pass_threshold: 10
+  numeric_state_warning_threshold: 5
+
+sensor.pet_thirst_filter:
+  navigation_path: /the-matrix/cats
+  numeric_state_pass_threshold: 30
+  numeric_state_warning_threshold: 10
+```
+
+`sensor.pet_thirst_filter` chip will be green when it's above 30, it will be yellow when bove 10, otherwise it will be red (or `on_color`)
+
 ## Usage
 
 The card will automatically:
@@ -218,6 +244,8 @@ The card will automatically:
 
 ## Options
 
+### Card Configuration
+
 | Name             | Type    | Default                     | Description                                                                              |
 | ---------------- | ------- | --------------------------- | ---------------------------------------------------------------------------------------- |
 | status_path      | string  | "home"                      | The path identifier for the home view. These show all "problem" chips across all areas.  |
@@ -225,6 +253,16 @@ The card will automatically:
 | additional_label | string  | null                        | This is useful if you want to roll-up entities in a non area view, using a second label. |
 | solo_label       | string  | null                        | Use this option to override having a status label or areas.                              |
 | area             | string  | null                        | Use this option to override using the url slug.                                          |
+
+### Entity Configuration
+
+| Name                            | Type    | Default            | Description                                                              |
+| ------------------------------- | ------- | ------------------ | ------------------------------------------------------------------------ |
+| numeric_state_pass_threshold    | number  | null               | The threshold value to determine a passing state for numeric entities.   |
+| numeric_state_warning_threshold | number  | 0null              | The threshold value to determine a warning state for numeric entities.   |
+| on_color                        | string  | 'var(--red-color)' | The color representing the active or on state.                           |
+| on_state                        | boolean | 'on'               | The boolean value representing the active or on state.                   |
+| navigation_path                 | string  | null               | The path identifier for the navigation view. Uses 'more-info' by default |
 
 ## Troubleshooting
 
