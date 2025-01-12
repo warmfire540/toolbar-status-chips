@@ -1,4 +1,16 @@
 /**
+ * Represents the validation status of an entity's state
+ * Pass: State exceeds the pass threshold
+ * Warning: State is between warning and pass thresholds
+ * Error: State is below warning threshold or invalid
+ */
+enum StateValidation {
+  Pass,
+  Warning,
+  Error,
+}
+
+/**
  * Represents a Home Assistant entity with its state and attributes
  */
 export class ChipEntity {
@@ -23,9 +35,8 @@ export class ChipEntity {
    * 3. Numeric state greater than 0
    */
   get isActive(): boolean {
-    return (
-      this.state === (this.attributes.on_state || "on") || this.isPositiveState
-    );
+    const validation = this.validateState();
+    return validation !== StateValidation.Pass;
   }
 
   /**
@@ -45,18 +56,17 @@ export class ChipEntity {
    * - Uses the original active/inactive logic
    */
   get iconColor(): string {
-    if (this.isNumeric(this.state)) {
-      const numericState = parseFloat(this.state);
-      if (numericState > this.attributes.numeric_state_pass_threshold)
-        return "var(--green-color)";
-      if (numericState > this.attributes.numeric_state_warning_threshold)
-        return "var(--amber-color)";
-    }
+    const validation = this.validateState();
 
-    // the entity state matches configured on_state or it's a positive number
-    return this.isActive
-      ? this.attributes.on_color || "var(--red-color)"
-      : "var(--green-color)";
+    switch (validation) {
+      case StateValidation.Pass:
+        return "var(--green-color)";
+      case StateValidation.Warning:
+        return this.attributes.on_color || "var(--amber-color)";
+      default:
+        // Non-numeric fail or below warning threshold
+        return this.attributes.on_color || "var(--red-color)";
+    }
   }
 
   /**
@@ -66,4 +76,50 @@ export class ChipEntity {
     (typeof num === "number" ||
       (typeof num === "string" && num.trim() !== "")) &&
     !isNaN(num as number);
+
+  /**
+   * Validates a state value against defined thresholds if numeric, or against 'on' state if non-numeric
+   * @returns StateValidation indicating if the state passes, warns, or errors
+   *
+   * For numeric states:
+   * If thresholds are defined:
+   * - Pass: if value > numeric_state_pass_threshold
+   * - Warning: if value > numeric_state_warning_threshold but <= pass_threshold
+   * - Error: if value <= warning_threshold
+   * If thresholds are not defined:
+   * - Pass: if value === 0
+   * - Error: if value > 0
+   *
+   * For non-numeric states:
+   * - Error: if matches on_state
+   * - Pass: if doesn't match on_state
+   */
+  private validateState(): StateValidation {
+    if (!this.isNumeric(this.state)) {
+      if (this.state === (this.attributes.on_state || "on")) {
+        return StateValidation.Error;
+      }
+      return StateValidation.Pass;
+    }
+
+    const numericState = parseFloat(this.state);
+
+    // Check if threshold attributes exist
+    if (
+      this.attributes.numeric_state_pass_threshold === undefined &&
+      this.attributes.numeric_state_warning_threshold === undefined
+    ) {
+      // Fallback logic: Pass if 0, Error if > 0
+      return numericState === 0 ? StateValidation.Pass : StateValidation.Error;
+    }
+
+    if (numericState > this.attributes.numeric_state_pass_threshold) {
+      return StateValidation.Pass;
+    }
+    if (numericState > this.attributes.numeric_state_warning_threshold) {
+      return StateValidation.Warning;
+    }
+
+    return StateValidation.Error;
+  }
 }
