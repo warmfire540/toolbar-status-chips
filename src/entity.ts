@@ -70,6 +70,13 @@ export class ChipEntity {
   }
 
   /**
+   * Indicates whether an optional entity should be excluded when inactive from the status path.
+   */
+  get excludeOnStatusPath(): boolean {
+    return this.attributes.exclude_on_status_path || false;
+  }
+
+  /**
    * Checks if a value is numeric
    */
   private isNumeric = (num: any) =>

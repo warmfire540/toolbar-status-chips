@@ -258,10 +258,11 @@ The card will automatically:
 
 | Name                            | Type    | Default            | Description                                                              |
 | ------------------------------- | ------- | ------------------ | ------------------------------------------------------------------------ |
+| exclude_on_status_path          | boolean | false              | Use this option to hide entities from the main status page always.       |
 | numeric_state_pass_threshold    | number  | null               | The threshold value to determine a passing state for numeric entities.   |
 | numeric_state_warning_threshold | number  | 0null              | The threshold value to determine a warning state for numeric entities.   |
 | on_color                        | string  | 'var(--red-color)' | The color representing the active or on state.                           |
-| on_state                        | boolean | 'on'               | The boolean value representing the active or on state.                   |
+| on_state                        | string  | 'on'               | The string value representing the active or on state.                    |
 | navigation_path                 | string  | null               | The path identifier for the navigation view. Uses 'more-info' by default |
 
 ## Troubleshooting

@@ -2,13 +2,37 @@ import { Entity, HomeAssistant } from "./types";
 import { ChipEntity } from "./entity";
 
 /**
- * Determines if an entity should be included based on its state
+ * Determines if an entity should be included based on its state and path configuration
  * @param {ChipEntity} entity - The entity to check
- * @param {boolean} optional - Whether entities must be "active" to be included
+ * @param {boolean} optional - Whether the entity is optional. Optional entities with
+ *                            excludeOnStatusPath set will always be excluded.
  * @returns {boolean} - Whether the entity should be included
+ *
+ * @example
+ * // Regular non-optional entity - only included if active
+ * shouldIncludeEntity({ isActive: false, excludeOnStatusPath: false }, false) // returns false
+ *
+ * // Optional entity without path exclusion - included regardless of status
+ * shouldIncludeEntity({ isActive: false, excludeOnStatusPath: false }, true) // returns true
+ *
+ * // Optional entity with path exclusion - always excluded
+ * shouldIncludeEntity({ isActive: true, excludeOnStatusPath: true }, true) // returns false
  */
-const shouldIncludeEntity = (entity: ChipEntity, optional: boolean): boolean =>
-  !optional || entity.isActive;
+const shouldIncludeEntity = (
+  entity: ChipEntity,
+  optional: boolean
+): boolean => {
+  // Special case: if the entity is optional but inactive and configured to exclude optional inactive entities,
+  // explicitly exclude it regardless of other conditions
+  if (optional && entity.excludeOnStatusPath) {
+    return false;
+  }
+
+  // Standard inclusion logic:
+  // - If not optional, entity must be active to be included
+  // - If optional, entity is included regardless of active status (unless handled by case above)
+  return !optional || entity.isActive;
+};
 
 /**
  * Merges two arrays of objects based on a common key, updating items from arr1 with matching properties from arr2.
