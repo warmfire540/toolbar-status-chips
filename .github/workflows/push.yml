@@ -19,6 +19,7 @@ jobs:
       - name: "Checkout source code"
         uses: "actions/checkout@v2"
         with:
+          ssh-key: ${{ secrets.DEPLOY_KEY }}
           ref: ${{ github.ref }}
 
       - name: "Automated Version Bump"
@@ -61,6 +62,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
+          ssh-key: ${{ secrets.DEPLOY_KEY }}
           fetch-depth: 0
           ref: main
 
