@@ -20,7 +20,6 @@ jobs:
         uses: "actions/checkout@v2"
         with:
           ssh-key: ${{ secrets.DEPLOY_KEY }}
-          persist-credentials: false
           ref: ${{ github.ref }}
 
       - name: "Automated Version Bump"
@@ -29,6 +28,12 @@ jobs:
         with:
           version-type: ${{ github.ref == 'refs/heads/release' && 'minor' || 'patch' }}
           bump-policy: "ignore"
+          skip-push: "true"
+
+      - name: "Create Tags and package version"
+        run: |
+          git push --follow-tags
+          git push --tags
 
   create-release:
     name: "Create Release"
@@ -64,7 +69,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           ssh-key: ${{ secrets.DEPLOY_KEY }}
-          generateReleaseNotes: true
           fetch-depth: 0
           ref: main
 
