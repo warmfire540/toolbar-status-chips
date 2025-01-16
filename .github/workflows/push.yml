@@ -24,6 +24,12 @@ jobs:
           ssh-key: ${{ secrets.DEPLOY_KEY }}
           ref: ${{ github.ref }}
 
+      - name: "Debug - Output Actor" # Added debug step
+        id: debug
+        run: |
+          echo "actor=${{ github.actor }}"
+          echo "actor=${{ github.event.pusher.name }}"
+
       - name: "Automated Version Bump"
         id: bump
         uses: "phips28/gh-action-bump-version@master"
