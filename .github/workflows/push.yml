@@ -7,6 +7,12 @@ on:
       - "release"
 
 jobs:
+  dump:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump context
+        uses: crazy-max/ghaction-dump-context@v2
+
   check-committer:
     runs-on: ubuntu-latest
     outputs:
@@ -18,7 +24,7 @@ jobs:
       - id: check
         run: |
           EMAIL=$(git log -1 --format='%ae')
-          if [ "$EMAIL" != "github-actions[bot]@users.noreply.github.com" ]; then
+          if [ "$EMAIL" != "gh-action-bump-version@users.noreply.github.com" ]; then
             echo "should_run=true" >> $GITHUB_OUTPUT
           else
             echo "should_run=false" >> $GITHUB_OUTPUT
@@ -45,8 +51,6 @@ jobs:
       - name: "Automated Version Bump"
         id: bump
         uses: "phips28/gh-action-bump-version@master"
-        env:
-          GITHUB_EMAIL: github-actions[bot]@users.noreply.github.com
         with:
           version-type: ${{ github.ref == 'refs/heads/release' && 'minor' || 'patch' }}
           commit-message: "chore: bumps version to {{version}}"
