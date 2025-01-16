@@ -15,7 +15,7 @@ jobs:
     outputs:
       newTag: ${{ steps.bump.outputs.newTag }}
 
-    if: ${{ github.actor != 'github-actions[bot]' }}
+    if: ${{ $(git --no-pager log -1 --pretty=format:'%an') != 'Automated Version Bump' }}
 
     steps:
       - name: "Checkout source code"
@@ -24,17 +24,9 @@ jobs:
           ssh-key: ${{ secrets.DEPLOY_KEY }}
           ref: ${{ github.ref }}
 
-      - name: "Debug - Output Actor" # Added debug step
-        id: debug
-        run: |
-          echo "actor=${{ github.actor }}"
-          echo "actor=${{ github.event.pusher.name }}"
-
       - name: "Automated Version Bump"
         id: bump
         uses: "phips28/gh-action-bump-version@master"
-        env:
-          GITHUB_EMAIL: github-actions[bot]@users.noreply.github.com
         with:
           version-type: ${{ github.ref == 'refs/heads/release' && 'minor' || 'patch' }}
           commit-message: "chore: bumps version to {{version}}"
