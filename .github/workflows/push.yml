@@ -7,15 +7,33 @@ on:
       - "release"
 
 jobs:
+  check-committer:
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.check.outputs.should_run }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+      - id: check
+        run: |
+          EMAIL=$(git log -1 --format='%ae')
+          if [ "$EMAIL" != "github-actions[bot]@users.noreply.github.com" ]; then
+            echo "should_run=true" >> $GITHUB_OUTPUT
+          else
+            echo "should_run=false" >> $GITHUB_OUTPUT
+          fi
+
   bump-version:
     name: "Bump Version or Tag"
+    needs: check-committer
     runs-on: ubuntu-latest
     permissions:
       contents: write
     outputs:
       newTag: ${{ steps.bump.outputs.newTag }}
 
-    if: ${{ $(git --no-pager log -1 --pretty=format:'%an') != 'Automated Version Bump' }}
+    if: ${{ needs.check-committer.outputs.should_run == 'true' }}
 
     steps:
       - name: "Checkout source code"
@@ -27,6 +45,8 @@ jobs:
       - name: "Automated Version Bump"
         id: bump
         uses: "phips28/gh-action-bump-version@master"
+        env:
+          GITHUB_EMAIL: github-actions[bot]@users.noreply.github.com
         with:
           version-type: ${{ github.ref == 'refs/heads/release' && 'minor' || 'patch' }}
           commit-message: "chore: bumps version to {{version}}"
@@ -62,10 +82,11 @@ jobs:
   update-main:
     name: "Update main branch with release changes"
     needs: bump-version
-    if: github.ref == 'refs/heads/release'
     runs-on: ubuntu-latest
     permissions:
       contents: write
+
+    if: github.ref == 'refs/heads/release'
 
     steps:
       - name: Checkout repository
