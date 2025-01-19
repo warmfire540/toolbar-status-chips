@@ -7,12 +7,6 @@ on:
       - "release"
 
 jobs:
-  dump:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Dump context
-        uses: crazy-max/ghaction-dump-context@v2
-
   check-committer:
     runs-on: ubuntu-latest
     outputs:
