@@ -15,6 +15,8 @@ jobs:
     steps:
       - name: Get Last PR Title
         id: get-pr-title
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           PR_TITLE=$(gh api graphql -f query='
             query {
