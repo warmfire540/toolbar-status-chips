@@ -18,13 +18,9 @@ jobs:
     outputs:
       should_run: ${{ steps.check.outputs.should_run }}
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
       - id: check
         run: |
-          EMAIL=$(git log -1 --format='%ae')
-          if [ "$EMAIL" != "gh-action-bump-version@users.noreply.github.com" ]; then
+          if [ "${{ github.event.commits[0].author.email }}" != "gh-action-bump-version@users.noreply.github.com" ]; then
             echo "should_run=true" >> $GITHUB_OUTPUT
           else
             echo "should_run=false" >> $GITHUB_OUTPUT

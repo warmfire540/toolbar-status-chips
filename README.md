@@ -8,9 +8,9 @@
 ![GitHub Tag](https://img.shields.io/github/v/tag/warmfire540/toolbar-status-chips?style=for-the-badge&color=yellow)
 ![GitHub branch status](https://img.shields.io/github/checks-status/warmfire540/toolbar-status-chips/main?style=for-the-badge)
 
-![stars](https://img.shields.io/github/stars/warmfire540/home-assistant-config-public.svg?style=for-the-badge)
-![home](https://img.shields.io/github/last-commit/warmfire540/home-assistant-config-public.svg?style=for-the-badge)
-![commits](https://img.shields.io/github/commit-activity/y/warmfire540/home-assistant-config-public?style=for-the-badge)
+![stars](https://img.shields.io/github/stars/warmfire540/toolbar-status-chips.svg?style=for-the-badge)
+![home](https://img.shields.io/github/last-commit/warmfire540/toolbar-status-chips.svg?style=for-the-badge)
+![commits](https://img.shields.io/github/commit-activity/y/warmfire540/toolbar-status-chips?style=for-the-badge)
 
 A custom card for Home Assistant that displays status chips in the toolbar for entities labeled with "status". The chips automatically update based on entity states and are positioned at the top of your dashboard.
 
