@@ -15,8 +15,6 @@ jobs:
     steps:
       - name: Get Last PR Title
         id: get-pr-title
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: |
           PR_TITLE=$(gh api graphql -f query='
             query {
@@ -35,7 +33,9 @@ jobs:
               }
             }
           ' --jq '.data.repository.ref.target.associatedPullRequests.nodes[0].title')
-          echo "$PR_TITLE"
+          echo "pr_title=$PR_TITLE" >> $GITHUB_OUTPUT
+      - name: Test PR Title Output
+        run: 'echo "The PR title is: ${{ steps.get-pr-title.outputs.pr_title }}"'
       - id: check
         run: |
           if [ "${{ github.event.commits[0].author.email }}" != "gh-action-bump-version@users.noreply.github.com" ]; then
