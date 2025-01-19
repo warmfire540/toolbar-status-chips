@@ -21,12 +21,14 @@ jobs:
           PR_TITLE=$(gh api graphql -f query='
             query {
               repository(owner: "${{ github.repository_owner }}", name: "${{ github.event.repository.name }}") {
-                ref(qualifiedName: "refs/heads/release") {
+                ref(qualifiedName: "release") {
                   target {
                     ... on Commit {
                       associatedPullRequests(last: 1) {
-                        nodes {
-                          title
+                        edges {
+                          node {
+                            title
+                          }
                         }
                       }
                     }
