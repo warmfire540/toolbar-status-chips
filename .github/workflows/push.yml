@@ -77,7 +77,7 @@ jobs:
           generateReleaseNotes: true
           tag: ${{ needs.bump-version.outputs.newTag }}
           body: ${{ steps.create-release-notes.outputs.release-notes }}
-          name: "v${{ needs.bump-version.outputs.newTag }} - ${{ steps.create-release-notes.outputs.release-notes }}"
+          name: "v${{ needs.bump-version.outputs.newTag }} - ${{ steps.create-release-notes.outputs.release-name }}"
 
   update-main:
     name: "Update main branch with release changes"
