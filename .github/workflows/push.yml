@@ -12,6 +12,27 @@ jobs:
     outputs:
       should_run: ${{ steps.check.outputs.should_run }}
     steps:
+      - name: Get Last PR Title
+        id: get-pr-title
+        run: |
+          PR_TITLE=$(gh api graphql -f query='
+            query {
+              repository(owner: "${{ github.repository_owner }}", name: "${{ github.event.repository.name }}") {
+                ref(qualifiedName: "refs/heads/release") {
+                  target {
+                    ... on Commit {
+                      associatedPullRequests(last: 1) {
+                        nodes {
+                          title
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ' --jq '.data.repository.ref.target.associatedPullRequests.nodes[0].title')
+          echo "$PR_TITLE"
       - id: check
         run: |
           if [ "${{ github.event.commits[0].author.email }}" != "gh-action-bump-version@users.noreply.github.com" ]; then
