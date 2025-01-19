@@ -15,6 +15,8 @@ jobs:
     steps:
       - name: Get Last PR Title
         id: get-pr-title
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           PR_TITLE=$(gh api graphql -f query='
             query {
@@ -92,7 +94,7 @@ jobs:
       - uses: johnyherangi/create-release-notes@main
         id: create-release-notes
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
       - uses: ncipollo/release-action@v1
         with:
           artifacts: "dist/**"
