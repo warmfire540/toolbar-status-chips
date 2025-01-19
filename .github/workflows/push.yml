@@ -70,14 +70,38 @@ jobs:
       - uses: johnyherangi/create-release-notes@main
         id: create-release-notes
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Get Last PR Title
+        id: get-pr-title
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          PR_TITLE=$(gh api graphql -f query='
+            query {
+              repository(owner: "${{ github.repository_owner }}", name: "${{ github.event.repository.name }}") {
+                commit: object(expression: ${{ github.sha }}) {
+                  ... on Commit {
+                    associatedPullRequests(first: 1) {
+                      edges {
+                        node {
+                          title
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ' --jq '.data.repository.commit.associatedPullRequests.edges[0].node.title')
+          echo "pr_title=$PR_TITLE" >> $GITHUB_OUTPUT
       - uses: ncipollo/release-action@v1
         with:
           artifacts: "dist/**"
           generateReleaseNotes: true
           tag: ${{ needs.bump-version.outputs.newTag }}
           body: ${{ steps.create-release-notes.outputs.release-notes }}
-          name: "v${{ needs.bump-version.outputs.newTag }} - ${{ steps.create-release-notes.outputs.release-name }}"
+          name: "${{ needs.bump-version.outputs.newTag }} - ${{ steps.get-pr-title.outputs.pr_title }}"
 
   update-main:
     name: "Update main branch with release changes"
