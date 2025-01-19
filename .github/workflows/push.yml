@@ -80,7 +80,7 @@ jobs:
           PR_TITLE=$(gh api graphql -f query='
             query {
               repository(owner: "${{ github.repository_owner }}", name: "${{ github.event.repository.name }}") {
-                commit: object(expression: ${{ github.sha }}) {
+                commit: object(expression: "${{ github.sha }}") {
                   ... on Commit {
                     associatedPullRequests(first: 1) {
                       edges {
