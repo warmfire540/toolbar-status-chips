@@ -1,10 +1,11 @@
-import { css, html, LitElement } from "lit";
+import { html, CSSResult, LitElement } from "lit";
 import { state } from "lit/decorators.js";
-import { Task, TaskStatus } from "@lit/task";
+import { Task } from "@lit/task";
 import * as equal from "fast-deep-equal";
 import { createChipConfig } from "./config";
 import { ChipEntity } from "./entity";
 import { entitiesThatShouldBeChips, addMarginForChips } from "./helpers";
+import { styles } from "./styles";
 import { Config, HomeAssistant } from "./types";
 import { version } from "../package.json";
 
@@ -54,16 +55,9 @@ class ToolbarStatusChips extends LitElement {
   }
 
   // styles to position the status chips at the top of on the toolbar
-  static styles = css`
-    #chips {
-      position: fixed;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 5;
-      --stack-card-gap: 0;
-    }
-  `;
+  static get styles(): CSSResult {
+    return styles;
+  }
 
   // config property getters
   get additionalLabel() {
