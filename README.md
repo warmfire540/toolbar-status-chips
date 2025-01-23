@@ -186,7 +186,7 @@ For entities you don't control, use [customizations](https://www.home-assistant.
 ```yaml
 customize:
   sensor.mfc_7860dw_status:
-    on_state: "unavailable"
+    on_state: 'unavailable'
 
   binary_sensor.rolo_error:
     navigation_path: /the-matrix/living-room
@@ -208,7 +208,7 @@ sensor:
     icon: mdi:printer-alert
     attributes:
       navigation_path: /the-matrix/network?anchor=updates
-      on_state: "True"
+      on_state: 'True'
 ```
 
 #### Numeric State Entities

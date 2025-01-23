@@ -19,19 +19,19 @@ import type { Entity, HomeAssistant } from './types';
  * shouldIncludeEntity({ isActive: true, excludeOnStatusPath: true }, true) // returns false
  */
 const shouldIncludeEntity = (
-    entity: ChipEntity,
-    optional: boolean,
+  entity: ChipEntity,
+  optional: boolean,
 ): boolean => {
-    // Special case: if the entity is optional but inactive and configured to exclude optional inactive entities,
-    // explicitly exclude it regardless of other conditions
-    if (optional && entity.excludeOnStatusPath) {
-        return false;
-    }
+  // Special case: if the entity is optional but inactive and configured to exclude optional inactive entities,
+  // explicitly exclude it regardless of other conditions
+  if (optional && entity.excludeOnStatusPath) {
+    return false;
+  }
 
-    // Standard inclusion logic:
-    // - If not optional, entity must be active to be included
-    // - If optional, entity is included regardless of active status (unless handled by case above)
-    return !optional || entity.isActive;
+  // Standard inclusion logic:
+  // - If not optional, entity must be active to be included
+  // - If optional, entity is included regardless of active status (unless handled by case above)
+  return !optional || entity.isActive;
 };
 
 /**
@@ -50,16 +50,16 @@ const shouldIncludeEntity = (
  * // Returns: [{ id: 1, name: 'John', age: 30 }, { id: 2, name: 'Jane', age: 25 }]
  */
 const mergeArraysUsingMapObject = (arr1: any[], arr2: any[], key: string) => {
-    // Create a Map object using arr2, with the specified key as the Map key
-    // This provides O(1) lookup time for matching objects
-    const map = new Map(arr2.map((item) => [item[key], item]));
+  // Create a Map object using arr2, with the specified key as the Map key
+  // This provides O(1) lookup time for matching objects
+  const map = new Map(arr2.map((item) => [item[key], item]));
 
-    // Map over arr1 and spread both the original item and any matching updates from arr2
-    // If no matching item exists in arr2, map.get() returns undefined and no properties are spread
-    return arr1.map((item) => ({
-        ...item,
-        ...map.get(item[key]),
-    }));
+  // Map over arr1 and spread both the original item and any matching updates from arr2
+  // If no matching item exists in arr2, map.get() returns undefined and no properties are spread
+  return arr1.map((item) => ({
+    ...item,
+    ...map.get(item[key]),
+  }));
 };
 
 /**
@@ -72,30 +72,26 @@ const mergeArraysUsingMapObject = (arr1: any[], arr2: any[], key: string) => {
  * @returns Array of processed entities with their current states and attributes
  */
 export const entitiesThatShouldBeChips = (
-    entities: Entity[],
-    hass: HomeAssistant,
-    optional: boolean,
+  entities: Entity[],
+  hass: HomeAssistant,
+  optional: boolean,
 ): ChipEntity[] => {
-    // First, merge the entity definitions with their current states from Home Assistant
-    // Converting hass.states object to array using Object.values()
-    const mergedEntities = mergeArraysUsingMapObject(
-        entities,
-        Object.values(hass.states),
-        'entity_id',
-    );
+  // First, merge the entity definitions with their current states from Home Assistant
+  // Converting hass.states object to array using Object.values()
+  const mergedEntities = mergeArraysUsingMapObject(
+    entities,
+    Object.values(hass.states),
+    'entity_id',
+  );
 
-    // Filter out entities that don't meet inclusion criteria
-    // Then map to a standardized format with only necessary properties
-    return mergedEntities
-        .map(
-            (entity) =>
-                new ChipEntity(
-                    entity.entity_id,
-                    entity.state,
-                    entity.attributes,
-                ),
-        )
-        .filter((entity) => shouldIncludeEntity(entity, optional));
+  // Filter out entities that don't meet inclusion criteria
+  // Then map to a standardized format with only necessary properties
+  return mergedEntities
+    .map(
+      (entity) =>
+        new ChipEntity(entity.entity_id, entity.state, entity.attributes),
+    )
+    .filter((entity) => shouldIncludeEntity(entity, optional));
 };
 
 /**
@@ -114,22 +110,22 @@ export const entitiesThatShouldBeChips = (
  * addMarginForChips(60);
  */
 export const addMarginForChips = (margin = 45): void => {
-    // Check if viewport matches mobile breakpoint
-    if (!window.matchMedia('only screen and (max-width: 768px)').matches) {
-        // Skip margin addition if not on mobile viewport
-        return;
-    }
+  // Check if viewport matches mobile breakpoint
+  if (!window.matchMedia('only screen and (max-width: 768px)').matches) {
+    // Skip margin addition if not on mobile viewport
+    return;
+  }
 
-    // Navigate through Home Assistant's shadow DOM to find the view container
-    // Each querySelector may return null, so we use optional chaining
-    const viewContainer = document
-        ?.querySelector('home-assistant')
-        ?.shadowRoot?.querySelector('home-assistant-main')
-        ?.shadowRoot?.querySelector('ha-drawer partial-panel-resolver')
-        ?.querySelector('ha-panel-lovelace')
-        ?.shadowRoot?.querySelector('hui-root')
-        ?.shadowRoot?.querySelector('hui-view-container') as HTMLElement;
+  // Navigate through Home Assistant's shadow DOM to find the view container
+  // Each querySelector may return null, so we use optional chaining
+  const viewContainer = document
+    ?.querySelector('home-assistant')
+    ?.shadowRoot?.querySelector('home-assistant-main')
+    ?.shadowRoot?.querySelector('ha-drawer partial-panel-resolver')
+    ?.querySelector('ha-panel-lovelace')
+    ?.shadowRoot?.querySelector('hui-root')
+    ?.shadowRoot?.querySelector('hui-view-container') as HTMLElement;
 
-    // Set the margin if we found the container
-    viewContainer?.style?.setProperty('margin-top', `${margin}px`);
+  // Set the margin if we found the container
+  viewContainer?.style?.setProperty('margin-top', `${margin}px`);
 };

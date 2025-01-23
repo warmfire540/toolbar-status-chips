@@ -3,8 +3,8 @@ name: Bump & Tag
 on:
   push:
     branches:
-      - "main"
-      - "release"
+      - 'main'
+      - 'release'
 
 jobs:
   check-committer:
@@ -21,7 +21,7 @@ jobs:
           fi
 
   bump-version:
-    name: "Bump Version or Tag"
+    name: 'Bump Version or Tag'
     needs: check-committer
     runs-on: ubuntu-latest
     permissions:
@@ -32,28 +32,28 @@ jobs:
     if: ${{ needs.check-committer.outputs.should_run == 'true' }}
 
     steps:
-      - name: "Checkout source code"
-        uses: "actions/checkout@v2"
+      - name: 'Checkout source code'
+        uses: 'actions/checkout@v2'
         with:
           ssh-key: ${{ secrets.DEPLOY_KEY }}
           ref: ${{ github.ref }}
 
-      - name: "Automated Version Bump"
+      - name: 'Automated Version Bump'
         id: bump
-        uses: "phips28/gh-action-bump-version@master"
+        uses: 'phips28/gh-action-bump-version@master'
         with:
           version-type: ${{ github.ref == 'refs/heads/release' && 'minor' || 'patch' }}
-          commit-message: "chore: bumps version to {{version}}"
-          bump-policy: "ignore"
-          skip-push: "true"
+          commit-message: 'chore: bumps version to {{version}}'
+          bump-policy: 'ignore'
+          skip-push: 'true'
 
-      - name: "Create Tags and package version"
+      - name: 'Create Tags and package version'
         run: |
           git push --follow-tags
           git push --tags
 
   create-release:
-    name: "Create Release"
+    name: 'Create Release'
     needs: bump-version
     if: github.ref == 'refs/heads/release'
     runs-on: ubuntu-latest
@@ -66,7 +66,7 @@ jobs:
       - name: Run NPM build
         uses: anna-money/github-actions-npm@master
         with:
-          target: "build"
+          target: 'build'
       - uses: johnyherangi/create-release-notes@main
         id: create-release-notes
         env:
@@ -97,14 +97,14 @@ jobs:
           echo "pr_title=$PR_TITLE" >> $GITHUB_OUTPUT
       - uses: ncipollo/release-action@v1
         with:
-          artifacts: "dist/**"
+          artifacts: 'dist/**'
           generateReleaseNotes: true
           tag: ${{ needs.bump-version.outputs.newTag }}
           body: ${{ steps.create-release-notes.outputs.release-notes }}
-          name: "${{ needs.bump-version.outputs.newTag }} - ${{ steps.get-pr-title.outputs.pr_title }}"
+          name: '${{ needs.bump-version.outputs.newTag }} - ${{ steps.get-pr-title.outputs.pr_title }}'
 
   update-main:
-    name: "Update main branch with release changes"
+    name: 'Update main branch with release changes'
     needs: bump-version
     runs-on: ubuntu-latest
     permissions:
