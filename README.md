@@ -3,14 +3,14 @@
 ![Home Assistant](https://img.shields.io/badge/home%20assistant-%2341BDF5.svg?style=for-the-badge&logo=home-assistant&logoColor=white)
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/hacs/integration)
 
-![GitHub Release](https://img.shields.io/github/v/release/warmfire540/toolbar-status-chips?style=for-the-badge&logo=github)
-![GitHub Pre-Release](https://img.shields.io/github/v/release/warmfire540/toolbar-status-chips?include_prereleases&style=for-the-badge&logo=github&label=PRERELEASE)
-![GitHub Tag](https://img.shields.io/github/v/tag/warmfire540/toolbar-status-chips?style=for-the-badge&color=yellow)
-![GitHub branch status](https://img.shields.io/github/checks-status/warmfire540/toolbar-status-chips/main?style=for-the-badge)
+![GitHub Release](https://img.shields.io/github/v/release/homeassistant-extras/toolbar-status-chips?style=for-the-badge&logo=github)
+![GitHub Pre-Release](https://img.shields.io/github/v/release/homeassistant-extras/toolbar-status-chips?include_prereleases&style=for-the-badge&logo=github&label=PRERELEASE)
+![GitHub Tag](https://img.shields.io/github/v/tag/homeassistant-extras/toolbar-status-chips?style=for-the-badge&color=yellow)
+![GitHub branch status](https://img.shields.io/github/checks-status/homeassistant-extras/toolbar-status-chips/main?style=for-the-badge)
 
-![stars](https://img.shields.io/github/stars/warmfire540/toolbar-status-chips.svg?style=for-the-badge)
-![home](https://img.shields.io/github/last-commit/warmfire540/toolbar-status-chips.svg?style=for-the-badge)
-![commits](https://img.shields.io/github/commit-activity/y/warmfire540/toolbar-status-chips?style=for-the-badge)
+![stars](https://img.shields.io/github/stars/homeassistant-extras/toolbar-status-chips.svg?style=for-the-badge)
+![home](https://img.shields.io/github/last-commit/homeassistant-extras/toolbar-status-chips.svg?style=for-the-badge)
+![commits](https://img.shields.io/github/commit-activity/y/homeassistant-extras/toolbar-status-chips?style=for-the-badge)
 
 A custom card for Home Assistant that displays status chips in the toolbar for entities labeled with "status". The chips automatically update based on entity states and are positioned at the top of your dashboard.
 
@@ -52,7 +52,7 @@ This card is slightly opinionated in how you need to setup things for it to work
 1. Open HACS in your Home Assistant instance
 2. Click the menu icon in the top right and select "Custom repositories"
 3. Add this repository URL and select "Dashboard" as the category
-   - `https://github.com/warmfire540/toolbar-status-chips`
+   - `https://github.com/homeassistant-extras/toolbar-status-chips`
 4. Click "Install"
 
 ### Manual Installation
@@ -85,7 +85,7 @@ type: custom:toolbar-status-chips
 
 This assumes your main page you want to show chips on is on the path `home`. i.e. my home page is http://homeassistant.local:8123/the-matrix/home
 
-For example, see my HA configuration for my dashboard home page: [01-home.yaml](https://github.com/warmfire540/home-assistant-config-public/blob/home/ui_lovelace_minimalist/dashboard/views/01-home.yaml)
+For example, see my HA configuration for my dashboard home page: [01-home.yaml](https://github.com/homeassistant-extras/home-assistant-config-public/blob/home/ui_lovelace_minimalist/dashboard/views/01-home.yaml)
 
 ```yaml
 title: Home
@@ -122,7 +122,7 @@ Add the card to your Lovelace area view using YAML:
 type: custom:toolbar-status-chips
 ```
 
-For example, see my HA configuration for my dashboard room header card that's used on all my room routes: [room_header.yaml](https://github.com/warmfire540/home-assistant-config-public/blob/home/ui_lovelace_minimalist/custom_cards/layout/room_header.yaml)
+For example, see my HA configuration for my dashboard room header card that's used on all my room routes: [room_header.yaml](https://github.com/homeassistant-extras/home-assistant-config-public/blob/home/ui_lovelace_minimalist/custom_cards/layout/room_header.yaml)
 
 ```yaml
 title: Living Room
@@ -314,10 +314,10 @@ MIT License - see the [LICENSE](LICENSE) file for details
 
 ### Main
 
-[![Bump & Tag](https://github.com/warmfire540/toolbar-status-chips/actions/workflows/push.yml/badge.svg?branch=main)](https://github.com/warmfire540/toolbar-status-chips/actions/workflows/push.yml)
-[![Fast Forward Check](https://github.com/warmfire540/toolbar-status-chips/actions/workflows/pull_request.yaml/badge.svg?branch=main)](https://github.com/warmfire540/toolbar-status-chips/actions/workflows/pull_request.yaml)
+[![Bump & Tag](https://github.com/homeassistant-extras/toolbar-status-chips/actions/workflows/push.yml/badge.svg?branch=main)](https://github.com/homeassistant-extras/toolbar-status-chips/actions/workflows/push.yml)
+[![Fast Forward Check](https://github.com/homeassistant-extras/toolbar-status-chips/actions/workflows/pull_request.yaml/badge.svg?branch=main)](https://github.com/homeassistant-extras/toolbar-status-chips/actions/workflows/pull_request.yaml)
 
 ### Release
 
-[![Bump & Tag](https://github.com/warmfire540/toolbar-status-chips/actions/workflows/push.yml/badge.svg?branch=release)](https://github.com/warmfire540/toolbar-status-chips/actions/workflows/push.yml)
-[![Merge](https://github.com/warmfire540/toolbar-status-chips/actions/workflows/merge.yaml/badge.svg)](https://github.com/warmfire540/toolbar-status-chips/actions/workflows/merge.yaml)
+[![Bump & Tag](https://github.com/homeassistant-extras/toolbar-status-chips/actions/workflows/push.yml/badge.svg?branch=release)](https://github.com/homeassistant-extras/toolbar-status-chips/actions/workflows/push.yml)
+[![Merge](https://github.com/homeassistant-extras/toolbar-status-chips/actions/workflows/merge.yaml/badge.svg)](https://github.com/homeassistant-extras/toolbar-status-chips/actions/workflows/merge.yaml)
