@@ -85,7 +85,7 @@ type: custom:toolbar-status-chips
 
 This assumes your main page you want to show chips on is on the path `home`. i.e. my home page is http://homeassistant.local:8123/the-matrix/home
 
-For example, see my HA configuration for my dashboard home page: [01-home.yaml](https://github.com/homeassistant-extras/home-assistant-config-public/blob/home/ui_lovelace_minimalist/dashboard/views/01-home.yaml)
+For example, see my HA configuration for my dashboard home page: [01-home.yaml](https://github.com/warmfire540/home-assistant-config-public/blob/home/ui_lovelace_minimalist/dashboard/views/01-home.yaml)
 
 ```yaml
 title: Home
@@ -122,7 +122,7 @@ Add the card to your Lovelace area view using YAML:
 type: custom:toolbar-status-chips
 ```
 
-For example, see my HA configuration for my dashboard room header card that's used on all my room routes: [room_header.yaml](https://github.com/homeassistant-extras/home-assistant-config-public/blob/home/ui_lovelace_minimalist/custom_cards/layout/room_header.yaml)
+For example, see my HA configuration for my dashboard room header card that's used on all my room routes: [room_header.yaml](https://github.com/warmfire540/home-assistant-config-public/blob/home/ui_lovelace_minimalist/custom_cards/layout/room_header.yaml)
 
 ```yaml
 title: Living Room

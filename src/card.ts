@@ -1,6 +1,6 @@
 import { Task } from '@lit/task';
 import * as equal from 'fast-deep-equal';
-import { CSSResult, LitElement, html } from 'lit';
+import { CSSResult, html, LitElement } from 'lit';
 import { state } from 'lit/decorators.js';
 
 import { version } from '../package.json';
