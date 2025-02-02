@@ -16,7 +16,7 @@ jobs:
         uses: anna-money/github-actions-npm@master
         with:
           target: 'build'
-      - name: Run NPM build
+      - name: Run NPM test
         uses: anna-money/github-actions-npm@master
         with:
           target: 'test'
